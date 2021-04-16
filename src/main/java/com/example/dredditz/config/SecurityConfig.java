@@ -2,6 +2,7 @@ package com.example.dredditz.config;
 
 import com.example.dredditz.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,11 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // Authorization config
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()// csrf can occur when there are sessions!
+        http.cors().and()
+                .csrf().disable()// csrf can occur when there are sessions!
                 .authorizeRequests()
                 .antMatchers("/api/auth/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/subreddit/")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/api/subreddit/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
@@ -46,18 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // Authentication config
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //super.configure(auth);
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder amb) throws Exception {
-//        amb.userDetailsService(userDetailsService)
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        //super.configure(auth);
+//        auth.userDetailsService(userDetailsService)
 //                .passwordEncoder(passwordEncoder());
 //    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder amb) throws Exception {
+        amb.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
