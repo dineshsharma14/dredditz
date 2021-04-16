@@ -50,18 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // Authentication config
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        //super.configure(auth);
-//        auth.userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder amb) throws Exception {
-        amb.userDetailsService(userDetailsService)
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //super.configure(auth);
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder amb) throws Exception {
+//        amb.userDetailsService(userDetailsService)
+//                .passwordEncoder(passwordEncoder());
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
